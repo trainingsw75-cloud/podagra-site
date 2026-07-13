@@ -30,7 +30,11 @@
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:16px 0;
     box-shadow:0 12px 30px rgba(30,60,80,.07)}
-  h2{font-size:20px;font-weight:800;margin-bottom:6px;color:var(--teal2)}
+  h2{font-size:20px;font-weight:800;margin-bottom:6px;
+    background:linear-gradient(90deg,var(--teal2),var(--blue));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .card{position:relative}
+  .card::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:4px;border-radius:4px;
+    background:linear-gradient(180deg,var(--teal),var(--blue))}
   .hint{color:var(--muted);font-size:13px;margin-bottom:14px}
   label{font-weight:700;font-size:14px;display:block;margin:12px 0 6px}
   input[type=number],select{width:100%;padding:12px 13px;font-size:16px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
@@ -129,6 +133,32 @@
     <div class="result" id="uaRes"></div>
   </div>
 
+  <!-- ГЕМОГЛОБИН -->
+  <div class="card">
+    <h2 data-ru="🩸 Гемоглобин (HGB)" data-en="🩸 Hemoglobin (HGB)">🩸 Гемоглобин (HGB)</h2>
+    <p class="hint" data-ru="г/л" data-en="g/L">г/л</p>
+    <div class="row">
+      <div><label data-ru="Значение" data-en="Value">Значение</label><input type="number" step="1" id="hgb" placeholder="154"></div>
+      <div><label data-ru="Пол" data-en="Sex">Пол</label>
+        <select id="hgbSex"><option value="male" data-ru="Мужской" data-en="Male">Мужской</option><option value="female" data-ru="Женский" data-en="Female">Женский</option></select></div>
+    </div>
+    <button class="btn" onclick="checkHgb()"><span data-ru="Проверить" data-en="Check">Проверить</span></button>
+    <div class="result" id="hgbRes"></div>
+  </div>
+
+  <!-- СОЭ -->
+  <div class="card">
+    <h2 data-ru="🌡️ СОЭ (скорость оседания)" data-en="🌡️ ESR (sed. rate)">🌡️ СОЭ (скорость оседания)</h2>
+    <p class="hint" data-ru="мм/час — норма зависит от возраста и пола" data-en="mm/h — norm depends on age and sex">мм/час — норма зависит от возраста и пола</p>
+    <div class="row">
+      <div><label data-ru="Значение" data-en="Value">Значение</label><input type="number" step="1" id="esr" placeholder="6"></div>
+      <div><label data-ru="Пол" data-en="Sex">Пол</label>
+        <select id="esrSex"><option value="male" data-ru="Мужской" data-en="Male">Мужской</option><option value="female" data-ru="Женский" data-en="Female">Женский</option></select></div>
+    </div>
+    <button class="btn" onclick="checkEsr()"><span data-ru="Проверить" data-en="Check">Проверить</span></button>
+    <div class="result" id="esrRes"></div>
+  </div>
+
   <!-- ИИ по введённым -->
   <div class="card">
     <h2 data-ru="🤖 Объяснить мои показатели (ИИ, English)" data-en="🤖 Explain my values (AI, English)">🤖 Объяснить мои показатели (ИИ, English)</h2>
@@ -204,6 +234,23 @@
     else render("uaRes","#dc2626",T("Выше нормы","High"),val,"red",T("Выше нормы — риск подагры. К врачу-ревматологу.","Above normal — gout risk. See a rheumatologist."));
   }
 
+  function checkHgb(){
+    var v=num("hgb"); if(isNaN(v)||v<=0){ render("hgbRes","#2563eb",T("Введите число","Enter a number"),"","blue",T("Введите значение.","Enter a value.")); return; }
+    var sex=document.getElementById("hgbSex").value, low=sex==="male"?130:120, high=sex==="male"?170:150;
+    var val=Math.round(v)+" "+T("г/л","g/L");
+    if(v<low) render("hgbRes","#d97706",T("Ниже нормы","Below"),val,"amber",T("Низкий гемоглобин — возможна анемия. Обсудите с врачом.","Low hemoglobin — possible anemia. Discuss with a doctor."));
+    else if(v<=high) render("hgbRes","#16a34a",T("Норма","Normal"),val,"green",T("Гемоглобин в норме.","Hemoglobin is normal."));
+    else render("hgbRes","#d97706",T("Выше нормы","High"),val,"amber",T("Повышен — бывает при обезвоживании и др. Обсудите с врачом.","Elevated — can occur with dehydration, etc. Discuss with a doctor."));
+  }
+
+  function checkEsr(){
+    var v=num("esr"); if(isNaN(v)||v<0){ render("esrRes","#2563eb",T("Введите число","Enter a number"),"","blue",T("Введите значение.","Enter a value.")); return; }
+    var sex=document.getElementById("esrSex").value, high=sex==="male"?15:20;
+    var val=Math.round(v)+" "+T("мм/час","mm/h");
+    if(v<=high) render("esrRes","#16a34a",T("Норма","Normal"),val,"green",T("СОЭ в норме.","ESR is normal."));
+    else render("esrRes","#d97706",T("Повышена","Elevated"),val,"amber",T("Повышена — возможно воспаление или инфекция. Рекомендуется показаться врачу.","Elevated — possible inflammation or infection. Please see a doctor."));
+  }
+
   // ---- фото ----
   var photoDataUrl=null;
   function onPhoto(e){
@@ -243,6 +290,9 @@
     if(!isNaN(g)) parts.push("Glucose (fasting): "+g+" mmol/L");
     if(!isNaN(c)) parts.push("Total cholesterol: "+c+" mmol/L");
     if(!isNaN(u)) parts.push("Uric acid: "+u+" "+(uaUnit==="mgdl"?"mg/dL":"umol/L"));
+    var h=num("hgb"), e=num("esr");
+    if(!isNaN(h)) parts.push("Hemoglobin: "+h+" g/L");
+    if(!isNaN(e)) parts.push("ESR: "+e+" mm/h");
     return parts.join("\n");
   }
   function buildPrompt(){
