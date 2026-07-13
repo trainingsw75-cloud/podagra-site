@@ -3,295 +3,274 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Мочевая кислота — калькулятор и расшифровка | Подагра</title>
+<title>Расшифровка анализов крови · Blood Test Decoder</title>
+<script src="https://js.puter.com/v2/"></script>
 <style>
   :root{
-    --bg:#0f172a; --card:#ffffff; --ink:#1e293b; --muted:#64748b;
-    --brand:#6d28d9; --brand2:#db2777;
+    --ink:#22323c; --muted:#6a7b86; --line:#d9e6ee;
+    --bg:#eef5f9; --card:#ffffff;
+    --teal:#0e9aa7; --teal2:#0b7f8a; --blue:#2b7fd4;
     --green:#16a34a; --greenbg:#dcfce7; --amber:#d97706; --amberbg:#fef3c7;
-    --red:#dc2626; --redbg:#fee2e2; --blue:#2563eb; --bluebg:#dbeafe;
-    --line:#e2e8f0;
+    --red:#dc2626; --redbg:#fee2e2; --bluebg:#dbeafe;
   }
-  *{box-sizing:border-box}
-  body{
-    margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    color:var(--ink); line-height:1.6;
-    background:linear-gradient(180deg,#f5f3ff 0%,#eef2ff 30%,#f8fafc 100%);
-    min-height:100vh;
-  }
-  .wrap{max-width:820px;margin:0 auto;padding:0 18px 64px}
-  header.hero{
-    background:linear-gradient(135deg,var(--brand),var(--brand2));
-    color:#fff;padding:44px 18px 56px;text-align:center;position:relative;overflow:hidden;
-  }
-  header.hero::after{content:"";position:absolute;inset:0;background:
-    radial-gradient(600px 200px at 80% -10%,rgba(255,255,255,.25),transparent);}
-  .hero h1{margin:0 0 8px;font-size:clamp(26px,5vw,40px);font-weight:800;letter-spacing:-.5px}
-  .hero p{margin:0;opacity:.95;font-size:clamp(15px,2.4vw,18px)}
-  .hero .emoji{font-size:44px;display:block;margin-bottom:6px}
-  .card{
-    background:var(--card);border:1px solid var(--line);border-radius:18px;
-    box-shadow:0 10px 30px rgba(30,41,59,.08);padding:26px;margin:-32px 0 22px;
-  }
-  .card + .card{margin-top:22px}
-  h2{font-size:22px;margin:2px 0 14px;font-weight:800;letter-spacing:-.3px}
-  h3{font-size:17px;margin:18px 0 8px}
-  label{font-weight:700;font-size:14px;display:block;margin:14px 0 6px;color:var(--ink)}
-  .row{display:flex;gap:12px;flex-wrap:wrap}
-  .row > div{flex:1;min-width:150px}
-  input[type=number],select{
-    width:100%;padding:13px 14px;font-size:16px;border:2px solid var(--line);
-    border-radius:12px;background:#fff;color:var(--ink);transition:border-color .15s;
-  }
-  input:focus,select:focus{outline:none;border-color:var(--brand)}
-  .seg{display:flex;border:2px solid var(--line);border-radius:12px;overflow:hidden}
-  .seg button{flex:1;padding:12px;border:0;background:#fff;font-size:15px;font-weight:700;
-    color:var(--muted);cursor:pointer}
-  .seg button.active{background:var(--brand);color:#fff}
-  .cta{
-    margin-top:20px;width:100%;padding:16px;border:0;border-radius:14px;cursor:pointer;
-    font-size:18px;font-weight:800;color:#fff;
-    background:linear-gradient(135deg,var(--brand),var(--brand2));
-    box-shadow:0 8px 20px rgba(109,40,217,.35);transition:transform .08s;
-  }
-  .cta:active{transform:translateY(1px)}
-  #result{margin-top:22px;display:none}
-  #result.show{display:block;animation:fade .35s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-  .badge{display:inline-block;padding:8px 16px;border-radius:999px;font-weight:800;font-size:15px}
-  .bignum{font-size:34px;font-weight:800;margin:10px 0 2px}
-  .sub{color:var(--muted);font-size:14px}
-  .alert{border-radius:14px;padding:14px 16px;margin-top:14px;font-weight:600}
-  .alert.red{background:var(--redbg);color:#991b1b;border:1px solid #fecaca}
-  .alert.green{background:var(--greenbg);color:#166534;border:1px solid #bbf7d0}
-  .alert.blue{background:var(--bluebg);color:#1e40af;border:1px solid #bfdbfe}
-  .scale{height:14px;border-radius:999px;margin:18px 0 6px;
-    background:linear-gradient(90deg,#3b82f6 0%,#22c55e 30%,#eab308 62%,#ef4444 100%);position:relative}
-  .scale .mark{position:absolute;top:-6px;width:4px;height:26px;background:#0f172a;border-radius:3px;
-    box-shadow:0 0 0 3px #fff;transform:translateX(-2px)}
-  .scale-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
-  table{width:100%;border-collapse:collapse;margin-top:8px;font-size:14px}
-  th,td{border:1px solid var(--line);padding:9px 10px;text-align:left}
-  th{background:#f8fafc}
-  ul{margin:8px 0;padding-left:20px}
-  li{margin:4px 0}
-  details{border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin-top:10px;background:#fbfaff}
-  summary{cursor:pointer;font-weight:700;padding:6px 0}
-  .pill{display:inline-block;background:#f1f5f9;border:1px solid var(--line);border-radius:999px;
-    padding:4px 12px;font-size:13px;font-weight:700;margin:3px 4px 3px 0}
-  .disclaimer{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-radius:14px;
-    padding:16px 18px;font-size:14px;margin-top:22px}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);
+    line-height:1.6;background:
+      radial-gradient(60% 40% at 15% 0%,rgba(14,154,167,.14),transparent 60%),
+      radial-gradient(50% 40% at 95% 10%,rgba(43,127,212,.12),transparent 60%),
+      linear-gradient(180deg,#f4fafc,#e9f2f7);min-height:100vh}
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px 60px}
+  header.hero{text-align:center;padding:40px 16px 26px}
+  .hero .emoji{font-size:44px}
+  .hero h1{font-size:clamp(24px,5vw,36px);font-weight:900;margin:6px 0;color:var(--teal2)}
+  .hero p{color:var(--muted);font-size:15px}
+  .lang{display:inline-flex;gap:6px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px;margin-top:14px}
+  .lang button{border:0;background:transparent;color:var(--muted);font-weight:800;font-size:14px;padding:7px 16px;border-radius:999px;cursor:pointer}
+  .lang button.active{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#fff}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;margin:16px 0;
+    box-shadow:0 12px 30px rgba(30,60,80,.07)}
+  h2{font-size:20px;font-weight:800;margin-bottom:6px;color:var(--teal2)}
+  .hint{color:var(--muted);font-size:13px;margin-bottom:14px}
+  label{font-weight:700;font-size:14px;display:block;margin:12px 0 6px}
+  input[type=number],select{width:100%;padding:12px 13px;font-size:16px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+  input:focus,select:focus{outline:none;border-color:var(--teal)}
+  .row{display:flex;gap:12px;flex-wrap:wrap}.row>div{flex:1;min-width:140px}
+  .seg{display:flex;border:2px solid var(--line);border-radius:12px;overflow:hidden;margin-top:6px}
+  .seg button{flex:1;padding:11px;border:0;background:#fff;font-weight:700;color:var(--muted);cursor:pointer}
+  .seg button.active{background:var(--teal);color:#fff}
+  .btn{margin-top:16px;width:100%;padding:14px;border:0;border-radius:13px;cursor:pointer;font-size:16px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,var(--teal),var(--teal2));box-shadow:0 8px 18px rgba(14,154,167,.3)}
+  .btn.ai{background:linear-gradient(135deg,#7c5cff,#5b3fd6);box-shadow:0 8px 18px rgba(123,92,255,.3)}
+  .btn.sub{background:#eef2f5;color:var(--teal2);box-shadow:none}
+  .result{margin-top:16px;display:none}.result.show{display:block}
+  .badge{display:inline-block;padding:7px 15px;border-radius:999px;font-weight:800;font-size:14px;color:#fff}
+  .bignum{font-size:28px;font-weight:900;margin:8px 0 2px}
+  .alert{border-radius:12px;padding:12px 14px;margin-top:12px;font-weight:600;font-size:14px}
+  .alert.red{background:var(--redbg);color:#991b1b}.alert.green{background:var(--greenbg);color:#166534}
+  .alert.amber{background:var(--amberbg);color:#92610a}.alert.blue{background:var(--bluebg);color:#1e40af}
+  table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+  th,td{border:1px solid var(--line);padding:8px 9px;text-align:left}th{background:#f2f8fb}
+  .preview{margin-top:12px;max-width:100%;border-radius:12px;border:1px solid var(--line);display:none}
+  .aibox{margin-top:14px;white-space:pre-wrap;background:#f7fbfd;border:1px solid var(--line);border-radius:12px;padding:14px;font-size:14px;display:none;max-height:420px;overflow:auto}
+  .disclaimer{background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-radius:14px;padding:16px 18px;font-size:13px;margin-top:18px}
   .disclaimer b{color:#9a3412}
-  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:26px}
-  .meds-grid{display:grid;grid-template-columns:1fr;gap:12px;margin-top:10px}
-  .med{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:#fff}
-  .med h4{margin:0 0 6px;font-size:16px}
-  .med .tag{font-size:12px;font-weight:700;color:#fff;background:var(--brand);border-radius:999px;padding:2px 10px}
+  footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}
+  .spin{display:inline-block;width:16px;height:16px;border:3px solid #fff;border-top-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-3px;margin-right:8px}
+  @keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 <header class="hero">
-  <span class="emoji">🦶🧪</span>
-  <h1>Мочевая кислота: калькулятор и расшифровка</h1>
-  <p>Введите результат анализа — узнайте, в норме ли показатель и что делать дальше</p>
+  <div class="emoji">🩺🧪</div>
+  <h1 data-ru="Расшифровка анализов крови" data-en="Blood Test Decoder">Расшифровка анализов крови</h1>
+  <p data-ru="Глюкоза · Холестерин · Мочевая кислота — с объяснением и ИИ" data-en="Glucose · Cholesterol · Uric acid — with explanation and AI">Глюкоза · Холестерин · Мочевая кислота — с объяснением и ИИ</p>
+  <div class="lang">
+    <button id="btn-ru" class="active" onclick="setLang('ru')">RU</button>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
 </header>
 
 <div class="wrap">
 
-  <!-- КАЛЬКУЛЯТОР -->
-  <section class="card">
-    <h2>🔬 Проверить свой анализ</h2>
-
-    <label>Единицы измерения (смотрите в бланке анализа)</label>
-    <div class="seg" id="unitSeg">
-      <button type="button" data-unit="mgdl" class="active">мг/дл</button>
-      <button type="button" data-unit="umol">мкмоль/л</button>
-    </div>
-
-    <div class="row">
-      <div>
-        <label id="valLabel">Уровень мочевой кислоты, мг/дл</label>
-        <input type="number" id="val" step="0.1" min="0" placeholder="например, 5.2">
-      </div>
-      <div>
-        <label>Пол</label>
-        <select id="sex">
-          <option value="male">Мужской</option>
-          <option value="female">Женский</option>
-        </select>
-      </div>
-    </div>
-
-    <button class="cta" id="calcBtn">Показать результат</button>
-
-    <div id="result"></div>
-  </section>
-
-  <!-- НОРМЫ -->
-  <section class="card">
-    <h2>📊 Нормы мочевой кислоты</h2>
-    <table>
-      <tr><th>Кто</th><th>мг/дл</th><th>мкмоль/л</th></tr>
-      <tr><td>Мужчины</td><td>3,4 – 7,0</td><td>200 – 420</td></tr>
-      <tr><td>Женщины</td><td>2,4 – 6,0</td><td>140 – 360</td></tr>
-    </table>
-    <p class="sub" style="margin-top:12px">
-      Риск образования кристаллов и отложения солей в суставах заметно растёт при значениях
-      <b>выше ~6,8 мг/дл (≈405 мкмоль/л)</b> — это порог кристаллизации уратов.
-    </p>
-  </section>
-
-  <!-- ЛЕЧЕНИЕ / ПРЕПАРАТЫ -->
-  <section class="card">
-    <h2>💊 Что обычно применяют врачи</h2>
-    <p class="sub">Ниже — общая справочная информация о группах препаратов. <b>Это не назначение.</b>
-       Конкретный препарат, дозу и длительность подбирает только врач по результатам осмотра и анализов.</p>
-
-    <div class="meds-grid">
-      <div class="med">
-        <span class="tag">Острый приступ</span>
-        <h4>Снятие боли и воспаления</h4>
-        <p>При остром приступе подагры врач может назначить противовоспалительные средства
-           (НПВП — например, ибупрофен, напроксен), <b>колхицин</b> или короткий курс
-           глюкокортикоидов. Цель — быстро снять боль и отёк сустава.</p>
-      </div>
-      <div class="med">
-        <span class="tag">Длительно</span>
-        <h4>Снижение мочевой кислоты</h4>
-        <p>Для стойкого снижения уровня уратов применяют уратснижающую терапию —
-           <b>аллопуринол</b> или <b>фебуксостат</b>. Её назначают под контролем анализов и,
-           как правило, <b>не начинают во время приступа</b>.</p>
-      </div>
-      <div class="med">
-        <span class="tag">Образ жизни</span>
-        <h4>Питание и привычки</h4>
-        <ul>
-          <li>Меньше красного мяса, субпродуктов (печень, почки), морепродуктов</li>
-          <li>Отказ от пива и сладких газированных напитков, ограничение алкоголя</li>
-          <li>Достаточно воды, контроль веса, движение</li>
-        </ul>
-      </div>
-    </div>
-    <div class="alert red" style="font-weight:700">
-      ⚠️ Не занимайтесь самолечением. Дозы и выбор препарата — только по назначению врача.
-    </div>
-  </section>
-
-  <!-- КОГДА К ВРАЧУ + ПРИМЕР -->
-  <section class="card">
-    <h2>🩺 Когда обязательно к врачу</h2>
-    <ul>
-      <li>Внезапная острая боль, покраснение и припухлость сустава (часто большой палец ноги)</li>
-      <li>Повторяющиеся приступы болей в суставах</li>
-      <li>Стабильно высокая мочевая кислота в анализах</li>
-      <li>Приём мочегонных и других препаратов, влияющих на почки</li>
-    </ul>
-
-    <details>
-      <summary>📄 Пример подробного разбора (мочевая кислота 3,3 мг/дл, мужчина)</summary>
-      <div style="font-size:14px;color:#334155">
-        <p><b>Оценка параметров пациента.</b> Уровень мочевой кислоты 3,3 мг/дл — практически
-        нормальный для взрослого мужчины (норма обычно 3,4–7,0 мг/дл). Риск кристаллизации и
-        отложения солей в суставах появляется при значениях выше 6,8 мг/дл. ИМТ 25 — верхняя
-        граница нормы, без избыточной метаболической нагрузки. Отсутствие гипертонии и диабета
-        снижает вероятность нарушений, провоцирующих задержку мочевой кислоты.</p>
-        <p><b>Если суставы всё же беспокоят,</b> низкий уровень мочевой кислоты исключает
-        классическую подагру в данный момент, но похожие симптомы дают: ревматоидный или
-        реактивный артрит, остеоартрит (возрастные изменения хряща), псевдоподагра
-        (кристаллы пирофосфата кальция).</p>
-        <p><b>Дальнейшие шаги:</b> при отсутствии жалоб — профилактическое наблюдение и здоровый
-        образ жизни; при сомнениях в «модельных» данных — сдать реальный биохимический анализ
-        крови в лаборатории; при реальных болях — очная консультация ревматолога или терапевта.</p>
-      </div>
-    </details>
-  </section>
-
-  <div class="disclaimer">
-    <b>Отказ от ответственности.</b> Информация носит ознакомительный характер и основана на
-    справочных данных и электронной модели. Программа <b>не выставляет диагноз и не назначает
-    лечение</b>. Для интерпретации результатов и плана обследования обратитесь к врачу.
+  <!-- ФОТО + ИИ -->
+  <div class="card">
+    <h2 data-ru="📷 Фото анализа + разбор ИИ" data-en="📷 Photo + AI analysis">📷 Фото анализа + разбор ИИ</h2>
+    <p class="hint" data-ru="Загрузите фото бланка — ИИ прочитает и объяснит показатели на английском. Фото обрабатывается сервисом ИИ; мы его не храним." data-en="Upload a photo of your results — AI will read and explain them. The photo is sent to an AI service for analysis; we do not store it.">Загрузите фото бланка — ИИ прочитает и объяснит показатели на английском. Фото обрабатывается сервисом ИИ; мы его не храним.</p>
+    <input type="file" accept="image/*" id="photo" onchange="onPhoto(event)">
+    <img id="preview" class="preview" alt="preview">
+    <button class="btn ai" onclick="analyzePhoto()"><span data-ru="🤖 Разобрать фото с ИИ" data-en="🤖 Analyze photo with AI">🤖 Разобрать фото с ИИ</span></button>
+    <div class="aibox" id="aiPhoto"></div>
   </div>
 
-  <footer>Сделано для образовательных целей • Данные анализа не сохраняются и никуда не отправляются</footer>
+  <!-- ГЛЮКОЗА -->
+  <div class="card">
+    <h2 data-ru="🩸 Глюкоза (сахар)" data-en="🩸 Glucose (blood sugar)">🩸 Глюкоза (сахар)</h2>
+    <p class="hint" data-ru="Натощак, ммоль/л" data-en="Fasting, mmol/L">Натощак, ммоль/л</p>
+    <input type="number" step="0.1" id="glu" placeholder="5.4">
+    <button class="btn" onclick="checkGlu()"><span data-ru="Проверить" data-en="Check">Проверить</span></button>
+    <div class="result" id="gluRes"></div>
+    <table>
+      <tr><th data-ru="Диапазон" data-en="Range">Диапазон</th><th data-ru="Оценка" data-en="Meaning">Оценка</th></tr>
+      <tr><td>3.9–5.5</td><td data-ru="Норма" data-en="Normal">Норма</td></tr>
+      <tr><td>5.6–6.9</td><td data-ru="Преддиабет" data-en="Prediabetes">Преддиабет</td></tr>
+      <tr><td>≥ 7.0</td><td data-ru="Высокая — к врачу" data-en="High — see a doctor">Высокая — к врачу</td></tr>
+    </table>
+  </div>
+
+  <!-- ХОЛЕСТЕРИН -->
+  <div class="card">
+    <h2 data-ru="🫀 Холестерин (общий)" data-en="🫀 Cholesterol (total)">🫀 Холестерин (общий)</h2>
+    <p class="hint" data-ru="ммоль/л" data-en="mmol/L">ммоль/л</p>
+    <input type="number" step="0.1" id="chol" placeholder="4.6">
+    <button class="btn" onclick="checkChol()"><span data-ru="Проверить" data-en="Check">Проверить</span></button>
+    <div class="result" id="cholRes"></div>
+    <table>
+      <tr><th data-ru="Диапазон" data-en="Range">Диапазон</th><th data-ru="Оценка" data-en="Meaning">Оценка</th></tr>
+      <tr><td>&lt; 5.2</td><td data-ru="Оптимально" data-en="Optimal">Оптимально</td></tr>
+      <tr><td>5.2–6.1</td><td data-ru="Погранично" data-en="Borderline">Погранично</td></tr>
+      <tr><td>≥ 6.2</td><td data-ru="Высокий" data-en="High">Высокий</td></tr>
+    </table>
+  </div>
+
+  <!-- МОЧЕВАЯ КИСЛОТА -->
+  <div class="card">
+    <h2 data-ru="🦶 Мочевая кислота" data-en="🦶 Uric acid">🦶 Мочевая кислота</h2>
+    <p class="hint" data-ru="Выберите единицы и пол" data-en="Choose units and sex">Выберите единицы и пол</p>
+    <div class="seg" id="uaUnit">
+      <button data-u="mgdl" class="active">мг/дл</button><button data-u="umol">мкмоль/л</button>
+    </div>
+    <div class="row">
+      <div><label data-ru="Значение" data-en="Value">Значение</label><input type="number" step="0.1" id="ua" placeholder="5.2"></div>
+      <div><label data-ru="Пол" data-en="Sex">Пол</label>
+        <select id="uaSex"><option value="male" data-ru="Мужской" data-en="Male">Мужской</option><option value="female" data-ru="Женский" data-en="Female">Женский</option></select></div>
+    </div>
+    <button class="btn" onclick="checkUA()"><span data-ru="Проверить" data-en="Check">Проверить</span></button>
+    <div class="result" id="uaRes"></div>
+  </div>
+
+  <!-- ИИ по введённым -->
+  <div class="card">
+    <h2 data-ru="🤖 Объяснить мои показатели (ИИ, English)" data-en="🤖 Explain my values (AI, English)">🤖 Объяснить мои показатели (ИИ, English)</h2>
+    <p class="hint" data-ru="ИИ объяснит введённые выше значения простыми словами на английском." data-en="AI explains the values entered above in plain English.">ИИ объяснит введённые выше значения простыми словами на английском.</p>
+    <button class="btn ai" onclick="analyzeValues()"><span data-ru="🤖 Объяснить с ИИ" data-en="🤖 Explain with AI">🤖 Объяснить с ИИ</span></button>
+    <button class="btn sub" onclick="copyPrompt()"><span data-ru="📋 Скопировать и открыть ChatGPT" data-en="📋 Copy & open ChatGPT">📋 Скопировать и открыть ChatGPT</span></button>
+    <div class="aibox" id="aiValues"></div>
+  </div>
+
+  <div class="disclaimer">
+    <b data-ru="Важно." data-en="Important.">Важно.</b>
+    <span data-ru="Это ознакомительный сервис и электронная модель. ИИ может ошибаться и НЕ ставит диагноз. Нормы у разных лабораторий отличаются. Для точной трактовки и лечения обратитесь к врачу." data-en="This is an educational tool and an electronic model. AI can be wrong and does NOT provide a diagnosis. Reference ranges vary between labs. For accurate interpretation and treatment, consult a doctor.">Это ознакомительный сервис и электронная модель. ИИ может ошибаться и НЕ ставит диагноз. Нормы у разных лабораторий отличаются. Для точной трактовки и лечения обратитесь к врачу.</span>
+  </div>
+
+  <footer><span data-ru="Данные не сохраняются на сервере." data-en="Your data is not stored on any server.">Данные не сохраняются на сервере.</span></footer>
 </div>
 
 <script>
-  var unit = "mgdl";
-  var K = 59.48; // 1 мг/дл = 59.48 мкмоль/л
+  var LANG = "ru";
+  function T(ru,en){ return LANG==="en"?en:ru; }
+  function setLang(l){
+    LANG=l;
+    document.querySelectorAll("[data-ru]").forEach(function(el){ el.textContent = (l==="en")?el.dataset.en:el.dataset.ru; });
+    document.documentElement.lang=l;
+    document.getElementById("btn-ru").classList.toggle("active",l==="ru");
+    document.getElementById("btn-en").classList.toggle("active",l==="en");
+    try{localStorage.setItem("bloodlang",l);}catch(e){}
+  }
 
-  var seg = document.getElementById("unitSeg");
-  seg.addEventListener("click", function(e){
-    var b = e.target.closest("button"); if(!b) return;
-    unit = b.dataset.unit;
-    Array.prototype.forEach.call(seg.children, function(x){x.classList.remove("active")});
-    b.classList.add("active");
-    document.getElementById("valLabel").textContent =
-      "Уровень мочевой кислоты, " + (unit==="mgdl" ? "мг/дл" : "мкмоль/л");
-    document.getElementById("val").placeholder = unit==="mgdl" ? "например, 5.2" : "например, 310";
+  function fmt(n,d){ return (Math.round(n*Math.pow(10,d))/Math.pow(10,d)).toString().replace(".",","); }
+  function num(id){ var v=(document.getElementById(id).value||"").replace(",","."); return parseFloat(v); }
+
+  function render(boxId,color,badge,big,alertCls,alertText,extra){
+    var b=document.getElementById(boxId);
+    b.className="result show";
+    b.innerHTML='<span class="badge" style="background:'+color+'">'+badge+'</span>'+
+      (big?'<div class="bignum">'+big+'</div>':'')+
+      '<div class="alert '+alertCls+'">'+alertText+'</div>'+(extra||'');
+  }
+
+  function checkGlu(){
+    var v=num("glu"); if(isNaN(v)||v<=0){ render("gluRes","#2563eb",T("Введите число","Enter a number"),"","blue",T("Введите значение из бланка.","Enter the value from your form.")); return; }
+    var val=fmt(v,1)+" "+T("ммоль/л","mmol/L");
+    if(v<3.9) render("gluRes","#2563eb",T("Ниже нормы","Below normal"),val,"blue",T("Ниже нормы. При слабости/голоде — покажитесь врачу.","Below normal. If you feel weak/hungry, see a doctor."));
+    else if(v<=5.5) render("gluRes","#16a34a",T("Норма","Normal"),val,"green",T("Сахар в норме. Продолжайте здоровый образ жизни.","Blood sugar is normal. Keep a healthy lifestyle."));
+    else if(v<=6.9) render("gluRes","#d97706",T("Преддиабет","Prediabetes"),val,"amber",T("Повышен — зона преддиабета. Обсудите с врачом, ограничьте сахар и быстрые углеводы.","Elevated — prediabetes range. Discuss with a doctor, cut sugar and fast carbs."));
+    else render("gluRes","#dc2626",T("Высокая","High"),val,"red",T("Высокий сахар — возможен диабет. Рекомендуется обратиться к врачу.","High blood sugar — diabetes possible. Please see a doctor."));
+  }
+
+  function checkChol(){
+    var v=num("chol"); if(isNaN(v)||v<=0){ render("cholRes","#2563eb",T("Введите число","Enter a number"),"","blue",T("Введите значение.","Enter a value.")); return; }
+    var val=fmt(v,1)+" "+T("ммоль/л","mmol/L");
+    if(v<5.2) render("cholRes","#16a34a",T("Оптимально","Optimal"),val,"green",T("Холестерин в норме.","Cholesterol is in a healthy range."));
+    else if(v<6.2) render("cholRes","#d97706",T("Погранично","Borderline"),val,"amber",T("Слегка повышен. Меньше жирного/жареного, больше движения; обсудите с врачом.","Slightly elevated. Less fatty/fried food, more activity; discuss with a doctor."));
+    else render("cholRes","#dc2626",T("Высокий","High"),val,"red",T("Высокий холестерин — риск для сосудов. Обратитесь к врачу.","High cholesterol — vascular risk. Please see a doctor."));
+  }
+
+  var uaUnit="mgdl";
+  document.getElementById("uaUnit").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return; uaUnit=b.dataset.u;
+    Array.prototype.forEach.call(this.children,function(x){x.classList.remove("active")}); b.classList.add("active");
   });
-
-  function fmt(n, d){ return n.toFixed(d).replace(".", ","); }
-
-  document.getElementById("calcBtn").addEventListener("click", function(){
-    var raw = (document.getElementById("val").value || "").replace(",", ".");
-    var v = parseFloat(raw);
-    var box = document.getElementById("result");
-    if(isNaN(v) || v <= 0){
-      box.className = "show";
-      box.innerHTML = '<div class="alert blue">Введите, пожалуйста, число из бланка анализа.</div>';
-      return;
+  function checkUA(){
+    var v=num("ua"); if(isNaN(v)||v<=0){ render("uaRes","#2563eb",T("Введите число","Enter a number"),"","blue",T("Введите значение.","Enter a value.")); return; }
+    var K=59.48, mgdl=(uaUnit==="mgdl")?v:v/K, umol=mgdl*K;
+    var sex=document.getElementById("uaSex").value, low=sex==="male"?3.4:2.4, high=sex==="male"?7.0:6.0, CR=6.8;
+    var val=fmt(mgdl,1)+" мг/дл ≈ "+fmt(umol,0)+" мкмоль/л";
+    if(mgdl<low) render("uaRes","#2563eb",T("Ниже нормы","Below"),val,"blue",T("Ниже нормы.","Below normal."));
+    else if(mgdl<=high){
+      var extra = mgdl>CR ? '<div class="alert red">'+T("Выше порога кристаллизации (6,8 мг/дл) — риск подагры.","Above crystallization threshold (6.8 mg/dL) — gout risk.")+'</div>' : '';
+      render("uaRes","#16a34a",T("Норма","Normal"),val,"green",T("В пределах нормы.","Within normal range."),extra);
     }
-    var sex = document.getElementById("sex").value;
-    var mgdl = unit==="mgdl" ? v : v / K;
-    var umol = mgdl * K;
+    else render("uaRes","#dc2626",T("Выше нормы","High"),val,"red",T("Выше нормы — риск подагры. К врачу-ревматологу.","Above normal — gout risk. See a rheumatologist."));
+  }
 
-    var low = sex==="male" ? 3.4 : 2.4;
-    var high = sex==="male" ? 7.0 : 6.0;
-    var CRYST = 6.8;
+  // ---- фото ----
+  var photoDataUrl=null;
+  function onPhoto(e){
+    var f=e.target.files[0]; if(!f) return;
+    var r=new FileReader();
+    r.onload=function(){ photoDataUrl=r.result; var img=document.getElementById("preview"); img.src=photoDataUrl; img.style.display="block"; };
+    r.readAsDataURL(f);
+  }
+  function busy(id,on){ var b=document.getElementById(id); b.style.display="block"; b.innerHTML= on? '<span class="spin"></span>'+T("ИИ думает…","AI is thinking…") : b.innerHTML; }
 
-    var status, cls, badgeColor, note;
-    if(mgdl < low){ status="Ниже нормы"; cls="blue"; badgeColor="var(--blue)"; }
-    else if(mgdl <= high){ status="В пределах нормы"; cls="green"; badgeColor="var(--green)"; }
-    else { status="Выше нормы"; cls= (mgdl>CRYST?"red":"amber"); badgeColor=(mgdl>CRYST?"var(--red)":"var(--amber)"); }
+  var PHOTO_PROMPT="You are a careful medical explainer (NOT a doctor). Read this blood test results image. For each parameter list: name, the value, and whether it is within / below / above the reference range shown on the form. Clearly flag anything abnormal. Explain briefly in plain English what each means. Keep it factual. End with: 'This is educational information, not a diagnosis. Please consult a doctor.' Answer in English.";
 
-    // позиция маркера на шкале 2..10 мг/дл
-    var pct = Math.max(0, Math.min(100, (mgdl - 2) / (10 - 2) * 100));
+  function aiText(res){
+    if(res==null) return "";
+    if(typeof res==="string") return res;
+    if(res.message&&res.message.content) return (typeof res.message.content==="string")?res.message.content:JSON.stringify(res.message.content);
+    if(res.text) return res.text;
+    try{ return res.toString(); }catch(e){ return JSON.stringify(res); }
+  }
 
-    var recs = "";
-    if(mgdl < low){
-      recs = "Показатель ниже нормы. Обычно классическая подагра при этом маловероятна. " +
-             "Если есть боли в суставах — стоит показаться врачу, причина может быть другой " +
-             "(артрит, артроз, псевдоподагра).";
-    } else if(mgdl <= high){
-      recs = "Показатель в пределах нормы. Специфическое лечение обычно не требуется — " +
-             "достаточно здорового образа жизни и наблюдения.";
-    } else if(mgdl <= CRYST){
-      recs = "Показатель выше нормы, но ниже порога кристаллизации. Разумно скорректировать " +
-             "питание, ограничить алкоголь и обсудить результат с врачом.";
-    } else {
-      recs = "Показатель выше порога кристаллизации (6,8 мг/дл) — повышен риск отложения " +
-             "кристаллов и подагры. Рекомендуется обратиться к врачу-ревматологу или терапевту.";
+  async function analyzePhoto(){
+    var box=document.getElementById("aiPhoto");
+    if(!photoDataUrl){ box.style.display="block"; box.textContent=T("Сначала загрузите фото.","Please upload a photo first."); return; }
+    box.style.display="block"; box.innerHTML='<span class="spin"></span>'+T("ИИ читает фото…","AI is reading the photo…");
+    try{
+      if(typeof puter==="undefined"||!puter.ai) throw new Error("no-puter");
+      var res=await puter.ai.chat(PHOTO_PROMPT, photoDataUrl);
+      box.textContent=aiText(res)||T("Пустой ответ.","Empty response.");
+    }catch(err){
+      box.innerHTML=T("⚠️ ИИ сейчас недоступен (возможно, нужен VPN). Запасной вариант: откройте ChatGPT и загрузите туда своё фото с вопросом «объясни мои анализы».","⚠️ AI is unavailable right now (a VPN may be needed). Fallback: open ChatGPT and upload your photo asking it to explain your blood test.")+
+        '<br><br><a class="btn sub" style="display:inline-block;text-decoration:none" href="https://chat.openai.com/" target="_blank" rel="noopener">→ ChatGPT</a>';
     }
+  }
 
-    var cryAlert = mgdl > CRYST
-      ? '<div class="alert red">⚠️ Выше порога кристаллизации уратов (6,8 мг/дл ≈ 405 мкмоль/л): повышен риск подагры.</div>'
-      : (mgdl <= high && mgdl>=low ? '<div class="alert green">✅ В пределах референсных значений для выбранного пола.</div>' : '');
+  function valuesText(){
+    var parts=[]; var g=num("glu"),c=num("chol"),u=num("ua");
+    if(!isNaN(g)) parts.push("Glucose (fasting): "+g+" mmol/L");
+    if(!isNaN(c)) parts.push("Total cholesterol: "+c+" mmol/L");
+    if(!isNaN(u)) parts.push("Uric acid: "+u+" "+(uaUnit==="mgdl"?"mg/dL":"umol/L"));
+    return parts.join("\n");
+  }
+  function buildPrompt(){
+    var v=valuesText();
+    return "Explain these blood test results in plain English: whether each is within a normal range, what it means, and simple lifestyle tips. Add a clear note that this is educational, not a diagnosis, and a doctor should be consulted.\n\n"+(v||"(no values entered)");
+  }
 
-    box.className = "show";
-    box.innerHTML =
-      '<span class="badge" style="background:'+badgeColor+';color:#fff">'+status+'</span>' +
-      '<div class="bignum">'+fmt(mgdl,1)+' мг/дл</div>' +
-      '<div class="sub">≈ '+fmt(umol,0)+' мкмоль/л • норма для '+(sex==="male"?"мужчин":"женщин")+': '+
-        fmt(low,1)+'–'+fmt(high,1)+' мг/дл</div>' +
-      '<div class="scale"><div class="mark" style="left:'+pct+'%"></div></div>' +
-      '<div class="scale-labels"><span>2</span><span>4</span><span>6</span><span>8</span><span>10 мг/дл</span></div>' +
-      cryAlert +
-      '<h3>Что это значит</h3><p>'+recs+'</p>' +
-      '<p class="sub">Ниже на странице — общая информация о препаратах и когда идти к врачу. ' +
-      'Это не заменяет очную консультацию.</p>';
+  async function analyzeValues(){
+    var box=document.getElementById("aiValues");
+    if(!valuesText()){ box.style.display="block"; box.textContent=T("Сначала введите хотя бы одно значение выше.","Enter at least one value above first."); return; }
+    box.style.display="block"; box.innerHTML='<span class="spin"></span>'+T("ИИ думает…","AI is thinking…");
+    try{
+      if(typeof puter==="undefined"||!puter.ai) throw new Error("no-puter");
+      var res=await puter.ai.chat(buildPrompt());
+      box.textContent=aiText(res)||T("Пустой ответ.","Empty response.");
+    }catch(err){
+      box.textContent=T("⚠️ ИИ недоступен. Нажмите «Скопировать и открыть ChatGPT» ниже и вставьте текст.","⚠️ AI unavailable. Use 'Copy & open ChatGPT' below and paste the text.");
+    }
+  }
+  function copyPrompt(){
+    var p=buildPrompt();
+    if(navigator.clipboard){ navigator.clipboard.writeText(p).catch(function(){}); }
+    window.open("https://chat.openai.com/","_blank","noopener");
+  }
 
-    box.scrollIntoView({behavior:"smooth", block:"nearest"});
-  });
+  // init
+  var saved=null; try{saved=localStorage.getItem("bloodlang");}catch(e){}
+  setLang(saved || ((navigator.language||"ru").slice(0,2)==="en"?"en":"ru"));
 </script>
 </body>
 </html>
